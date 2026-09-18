@@ -1,0 +1,24 @@
+{
+  "name": "devils-will-rise",
+  "version": "4.0.0",
+  "description": "Devils Will Rise - Full Stack Capture + Telegram Bot",
+  "main": "api/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "node bot.js",
+    "deploy": "vercel --prod",
+    "webhook:set": "node set-webhook.js",
+    "webhook:del": "node delete-webhook.js"
+  },
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "node-fetch": "^3.3.2",
+    "node-telegram-bot-api": "^0.66.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "@tneh_owner",
+  "license": "MIT"
+}
